@@ -1,0 +1,25 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8763
+spring:
+  application:
+    name: service-core
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 12000
+        readTimeout: 12000
+
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
+
+
+
+
+
