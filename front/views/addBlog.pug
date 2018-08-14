@@ -2,15 +2,20 @@ extends layout
 
 block content
 
-    #addBlog
+    #addBlog(style='float:left')
         form(action='/blog/add' method='post')
-            -var text = '需要自行添加样式，栗子：<h1>something</h1>';
             span topic：
                 br
                 input(name='topic' required='required' size='20' style='width:350px;height:21px')
             br
             span content:
                 br
-                textarea(name='content' cols='150' rows='30' placeholder=text required='required')
+                textarea(id='text-input' name='content' cols='70' rows='30' placeholder='需要自行添加样式，栗子：## something' required='required' oninput="this.editor.update()")
             br
             button(type='submit') submit
+    #markdown(style='float:left;position:relative;left:100px')
+        #preview
+
+
+    script
+        include ../public/javascripts/blog.js

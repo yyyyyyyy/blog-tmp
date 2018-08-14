@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var http = require('http');
+var md = require('markdown').markdown;
 
 router.get('/', function (req, res) {
     res.render('addBlog');
@@ -13,7 +14,7 @@ router.get('/:id', function (req, res) {
         port: 8762,
         path: '/findBlogById/' + req.param('id'),
         method: 'GET'
-    }
+    };
     http.get(options, function (response) {
         console.log('STATUS: ' + response.statusCode);
         var buffer = [];
@@ -25,8 +26,10 @@ router.get('/:id', function (req, res) {
             res.render('error');
         });
         response.on('end', function (chuck) {
-            var wholeData = Buffer.concat(buffer);
-            res.render('blog', {title: '三土同学', data: JSON.parse(wholeData)});
+            var data = Buffer.concat(buffer);
+            var blog = JSON.parse(data);
+            var content = md.toHTML(blog.content);
+            res.render('blog', {title: '三土同学', content: content});
         });
     })
 });
@@ -57,8 +60,10 @@ router.post('/add', function (req, res) {
             res.render('error');
         });
         response.on('end', function (chuck) {
-            var wholeData = Buffer.concat(buffer);
-            res.render('blog', {title: '三土同学', data: JSON.parse(wholeData)});
+            var data = Buffer.concat(buffer);
+            var blog = JSON.parse(data);
+            var content = md.toHTML(blog.content);
+            res.render('blog', {title: '三土同学', content: content});
         });
     });
 
