@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    #a-blog
+        a(href='/blog' target='_self') 写笔记
+    #topics(class='topics')
+        ul
+            each item in topics
+                li
+                    a(href='/blog/' + item.id target='_self') #{item.topic}

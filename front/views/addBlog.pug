@@ -1,0 +1,16 @@
+extends layout
+
+block content
+
+    #addBlog
+        form(action='/blog/add' method='post')
+            -var text = '需要自行添加样式，栗子：<h1>something</h1>';
+            span topic：
+                br
+                input(name='topic' required='required' size='20' style='width:350px;height:21px')
+            br
+            span content:
+                br
+                textarea(name='content' cols='150' rows='30' placeholder=text required='required')
+            br
+            button(type='submit') submit
