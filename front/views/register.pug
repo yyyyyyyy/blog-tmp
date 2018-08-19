@@ -1,0 +1,19 @@
+extends layout
+
+block content
+
+    if errorMsg
+        p #{errorMsg}
+
+    #register
+        form(action='/register' method='post')
+            #register-email
+                input(name='email' type='text' placeholder='EMAIL')
+            #register-username
+                input(name='username' type='text' placeholder='USERNAME')
+            #register-password
+                input(name='password' type='password' placeholder='PASSWORD')
+            #register-password-again
+                input(name='password-again' type='password' placeholder='PASSWORD AGAIN')
+            #register-buttom
+                input(type='submit' value='REGISTER')

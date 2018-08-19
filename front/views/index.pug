@@ -1,10 +1,19 @@
 extends layout
 
 block content
-    #a-blog
-        a(href='/blog' target='_self') 写笔记
-    #topics(class='topics')
-        ul
-            each item in topics
-                li
-                    a(href='/blog/' + item.id target='_self') #{item.topic}
+
+    if errorMsg
+        p #{errorMsg}
+
+    #index-login
+        form(action='/login' method='post')
+            #index-username
+                input(name='username' type='text' placeholder='USERNAME')
+            #index-password
+                input(name='password' type='password' placeholder='PASSWORD')
+            #index-buttom
+                input(type='submit' value='LOG IN')
+                input(type='button' value='REGISTER' onclick='register()')
+
+    script
+        include ../public/javascripts/index.js

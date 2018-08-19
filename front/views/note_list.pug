@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    #a-blog
+        a(href='/blog' target='_self') 写笔记
+    #topics(class='topics')
+        ul
+            if typeof notes != 'undefined'
+                each item in notes
+                    li
+                        a(href='/note/' + item.id target='_self') #{item.topic}

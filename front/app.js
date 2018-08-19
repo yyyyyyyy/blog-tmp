@@ -3,10 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/index-router');
 var usersRouter = require('./routes/users');
-var blogRouter = require('./routes/blog');
+var noteRouter = require('./routes/note-router');
 
 var app = express();
 
@@ -20,9 +22,20 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+    name: 'JSESSIONID',
+    secret: 'yaochow',  // 用来对session id相关的cookie进行签名
+    store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
+    saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
+    resave: false,  // 是否每次都重新保存会话，建议false
+    cookie: {
+        maxAge: 1800 * 1000  // 有效期，单位是毫秒
+    }
+}));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/blog', blogRouter);
+app.use('/note', noteRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
