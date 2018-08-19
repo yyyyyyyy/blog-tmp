@@ -7,10 +7,23 @@ server:
 spring:
   application:
     name: service-zuul
+  redis:
+    host: localhost
+    port: 6379
+
+ribbon:
+  ReadTimeout: 3000
+  ConnectTimeout: 3000
+
 zuul:
   routes:
     api-a:
-      path: /**
+      path: /core/**
       serviceId: service-core
+      sensitiveHeaders: "*"
+    api-b:
+      path: /user/**
+      serviceId: service-user
+      sensitiveHeaders: "*"
 
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 6000
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 12000
