@@ -8,15 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RestController
 public class BlogsController {
 
     @Autowired
     BlogsService blogsServiceImpl;
+    @Autowired
+    HttpServletRequest request;
 
     @RequestMapping(value = "/findAllBlogs", method = RequestMethod.GET)
     public String findAll() {
+        String id = request.getSession().getId();
+        log.info("test SessionId : {}", id);
         Long start = System.currentTimeMillis();
         log.info("findAll");
         String result = JSONObject.toJSONString(blogsServiceImpl.findAll());

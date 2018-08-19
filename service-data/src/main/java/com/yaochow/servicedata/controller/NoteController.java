@@ -1,0 +1,141 @@
+package com.yaochow.servicedata.controller;
+
+import com.alibaba.fastjson.JSONObject;
+import com.yaochow.servicedata.common.base.BaseController;
+import com.yaochow.servicedata.entity.Note;
+import com.yaochow.servicedata.service.NoteService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+@RestController
+@RequestMapping("/note")
+@Slf4j
+public class NoteController extends BaseController {
+
+    @Autowired
+    private NoteService noteServiceImpl;
+    @Autowired
+    HttpServletRequest request;
+
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    public String insert(@RequestBody String noteJson) {
+        long start = System.currentTimeMillis();
+        String result;
+        log.info("insert, param : {}", noteJson);
+        try {
+            Note noteReq = JSONObject.parseObject(noteJson, Note.class);
+            Note noteRes = noteServiceImpl.insert(noteReq);
+            result = doSuccess(noteRes);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("insert, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "/updateByAccountId", method = RequestMethod.POST)
+    public String updateByAccountId(@RequestBody String noteJson) {
+        long start = System.currentTimeMillis();
+        String result;
+        log.info("update by accountId, param : {}", noteJson);
+        try {
+            Note noteReq = JSONObject.parseObject(noteJson, Note.class);
+//            if (checkSessionLost(request)) {
+//                log.info("session lost");
+//                result = doSessionError();
+//                return result;
+//            }
+//            String accountId = (String) request.getSession().getAttribute("uid");
+//            noteReq.setAccountId(accountId);
+            Note noteRes = noteServiceImpl.updateNoteById(noteReq);
+            result = doSuccess(noteRes);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+
+        log.info("update by accountId, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "/getNoteById/{id}", method = RequestMethod.GET)
+    public String getNoteById(@PathVariable String id) {
+        long start = System.currentTimeMillis();
+        String result;
+        log.info("get note by id : {}", id);
+        try {
+            Note noteRes = noteServiceImpl.getNoteById(id);
+            result = doSuccess(noteRes);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("get note by id, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "deleteNoteById/{id}", method = RequestMethod.GET)
+    public String deleteNoteById(@PathVariable String id) {
+        long start = System.currentTimeMillis();
+        String result;
+        log.info("delete note by id : {}", id);
+        try {
+            Note noteRes = noteServiceImpl.deleteNoteById(id);
+            result = doSuccess(noteRes);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("delete note by id, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "/ListNoteNameByAccountId2ndCategory")
+    public String listNoteNameByAccountId2ndCategory(@RequestParam("accountId") String accountId, @RequestParam("category") String category) {
+        long start = System.currentTimeMillis();
+        String result;
+        try {
+//            if (checkSessionLost(request)) {
+//                log.info("session lost");
+//                result = doSessionError();
+//                return result;
+//            }
+//            String accountId = (String) request.getSession().getAttribute("uid");
+            log.info("list noteName by accountId : {} 2nd category : {}", accountId, category);
+            List<Note> noteReq = noteServiceImpl.listNoteNameByAccountId2ndCategory(accountId, category);
+            result = doSuccess(noteReq);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("list noteName, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "listDeletedNoteNameByAccountId/{accountId}", method = RequestMethod.GET)
+    public String listDeletedNoteNameByAccountId(@PathVariable String accountId) {
+        long start = System.currentTimeMillis();
+        String result;
+        try {
+//            if (checkSessionLost(request)) {
+//                log.info("session lost");
+//                result = doSessionError();
+//                return result;
+//            }
+//            String accountId = (String) request.getSession().getAttribute("uid");
+            log.info("list deleted noteName by accountId : {}", accountId);
+            List<Note> noteReq = noteServiceImpl.listDeletedNoteNameByAccountId(accountId);
+            result = doSuccess(noteReq);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("list deleted noteName, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+}
