@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,9 +18,13 @@ public class BlogsController {
     private Logger logger = Logger.getLogger(BlogsController.class.getName());
     @Autowired
     BlogService blogService;
+    @Autowired
+    HttpServletRequest request;
 
     @RequestMapping("/findAllBlogs")
     public String findAllBlogs() {
+        String id = request.getSession().getId();
+        logger.log(Level.INFO, "session id : " + id);
         String result = blogService.findBlogs();
         logger.log(Level.INFO, "findAllBlogs : " + result);
         return result;

@@ -3,10 +3,13 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
 server:
-  port: 8763
+  port: 8764
 spring:
   application:
     name: service-core
+  redis:
+    host: localhost
+    port: 6379
 
 feign:
   hystrix:
@@ -17,7 +20,16 @@ feign:
         connectTimeout: 12000
         readTimeout: 12000
 
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 5000
+
+
 
 
 
