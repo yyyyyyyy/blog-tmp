@@ -20,9 +20,9 @@ public interface NoteService {
     String deleteNoteById(@PathVariable("id") String id);
 
     @RequestMapping(value = "/note/ListNoteNameByAccountId2ndCategory", method = RequestMethod.GET)
-    String listNoteNameByAccountId2ndCategory(@RequestParam("accountId") String accountId, @RequestParam("category") String category);
+    String listNoteNameByAccountId2ndCategory(@RequestParam("category") String category);
 
-    @RequestMapping(value = "/note/listDeletedNoteNameByAccountId/{accountId}", method = RequestMethod.GET)
-    String listDeletedNoteNameByAccountId(@PathVariable String accountId);
+    @RequestMapping(value = "/note/listDeletedNoteNameByAccountId", method = RequestMethod.GET)
+    String listDeletedNoteNameByAccountId();
 
 }

@@ -9,14 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
 /**
  * 登陆过滤器：检查用户是否已登陆
  */
-
+@Component
 public class LoginFilter extends ZuulFilter {
 
     private Logger log = LoggerFactory.getLogger(LoginFilter.class);
@@ -28,7 +27,7 @@ public class LoginFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 0;
+        return 1;
     }
 
     /**
@@ -59,18 +58,7 @@ public class LoginFilter extends ZuulFilter {
         log.info("user filter begin");
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        HttpServletResponse response = ctx.getResponse();
-        log.info(request.getHeader("Origin"));
-        response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:3000");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
-        response.setHeader("Access-Control-Allow-Credentials", "true"); //是否支持cookie跨域
-        log.info(String.format("%s >>> %s", request.getMethod(), request.getRequestURL().toString()));
-        String sessionId = request.getSession().getId();
-        log.info("sessionId : {}", sessionId);
         String uid = (String) request.getSession().getAttribute("uid");
-        log.info("uid : {}", uid);
         if (StringUtils.isBlank(uid)) {
             try {
                 JSONObject result = new JSONObject();

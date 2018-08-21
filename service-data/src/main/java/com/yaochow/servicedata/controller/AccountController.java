@@ -60,13 +60,13 @@ public class AccountController extends BaseController {
         log.info("update account by id, param : {}", accountJson);
         try {
             Account accountReq = JSONObject.parseObject(accountJson, Account.class);
-//            if (checkSessionLost(request)){
-//                log.info("session lost");
-//                result = doSessionError();
-//                return result;
-//            }
-//            String accountId = (String) request.getSession().getAttribute("uid");
-//            accountReq.setId(accountId);
+            if (checkSessionLost(request)){
+                log.info("session lost");
+                result = doSessionError();
+                return result;
+            }
+            String accountId = (String) request.getSession().getAttribute("uid");
+            accountReq.setId(accountId);
             Account accountRes = accountServiceImpl.updateAccountById(accountReq);
             result = doSuccess(accountRes);
         } catch (Exception e) {

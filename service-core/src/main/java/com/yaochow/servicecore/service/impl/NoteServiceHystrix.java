@@ -27,12 +27,12 @@ public class NoteServiceHystrix extends BaseHystrix implements NoteService {
     }
 
     @Override
-    public String listNoteNameByAccountId2ndCategory(String accountId, String category) {
+    public String listNoteNameByAccountId2ndCategory(String category) {
         return doMsg();
     }
 
     @Override
-    public String listDeletedNoteNameByAccountId(String accountId) {
+    public String listDeletedNoteNameByAccountId() {
         return doMsg();
     }
 }

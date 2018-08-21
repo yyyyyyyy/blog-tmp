@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/note")
@@ -28,6 +29,13 @@ public class NoteController extends BaseController {
         log.info("insert, param : {}", noteJson);
         try {
             Note noteReq = JSONObject.parseObject(noteJson, Note.class);
+            if (checkSessionLost(request)) {
+                log.info("session lost");
+                result = doSessionError();
+                return result;
+            }
+            String accountId = (String) request.getSession().getAttribute("uid");
+            noteReq.setAccountId(accountId);
             Note noteRes = noteServiceImpl.insert(noteReq);
             result = doSuccess(noteRes);
         } catch (Exception e) {
@@ -45,13 +53,13 @@ public class NoteController extends BaseController {
         log.info("update by accountId, param : {}", noteJson);
         try {
             Note noteReq = JSONObject.parseObject(noteJson, Note.class);
-//            if (checkSessionLost(request)) {
-//                log.info("session lost");
-//                result = doSessionError();
-//                return result;
-//            }
-//            String accountId = (String) request.getSession().getAttribute("uid");
-//            noteReq.setAccountId(accountId);
+            if (checkSessionLost(request)) {
+                log.info("session lost");
+                result = doSessionError();
+                return result;
+            }
+            String accountId = (String) request.getSession().getAttribute("uid");
+            noteReq.setAccountId(accountId);
             Note noteRes = noteServiceImpl.updateNoteById(noteReq);
             result = doSuccess(noteRes);
         } catch (Exception e) {
@@ -96,18 +104,22 @@ public class NoteController extends BaseController {
     }
 
     @RequestMapping(value = "/ListNoteNameByAccountId2ndCategory")
-    public String listNoteNameByAccountId2ndCategory(@RequestParam("accountId") String accountId, @RequestParam("category") String category) {
+    public String listNoteNameByAccountId2ndCategory(@RequestParam("category") String category) {
         long start = System.currentTimeMillis();
         String result;
         try {
-//            if (checkSessionLost(request)) {
-//                log.info("session lost");
-//                result = doSessionError();
-//                return result;
-//            }
-//            String accountId = (String) request.getSession().getAttribute("uid");
+            if (checkSessionLost(request)) {
+                log.info("session lost");
+                result = doSessionError();
+                return result;
+            }
+            String accountId = (String) request.getSession().getAttribute("uid");
+            if (Objects.equals(",", category)) {
+                category = null;
+            }
             log.info("list noteName by accountId : {} 2nd category : {}", accountId, category);
             List<Note> noteReq = noteServiceImpl.listNoteNameByAccountId2ndCategory(accountId, category);
+            log.info(JSONObject.toJSONString(noteReq));
             result = doSuccess(noteReq);
         } catch (Exception e) {
             log.info(e.getMessage(), e);
@@ -117,17 +129,17 @@ public class NoteController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "listDeletedNoteNameByAccountId/{accountId}", method = RequestMethod.GET)
-    public String listDeletedNoteNameByAccountId(@PathVariable String accountId) {
+    @RequestMapping(value = "listDeletedNoteNameByAccountId", method = RequestMethod.GET)
+    public String listDeletedNoteNameByAccountId() {
         long start = System.currentTimeMillis();
         String result;
         try {
-//            if (checkSessionLost(request)) {
-//                log.info("session lost");
-//                result = doSessionError();
-//                return result;
-//            }
-//            String accountId = (String) request.getSession().getAttribute("uid");
+            if (checkSessionLost(request)) {
+                log.info("session lost");
+                result = doSessionError();
+                return result;
+            }
+            String accountId = (String) request.getSession().getAttribute("uid");
             log.info("list deleted noteName by accountId : {}", accountId);
             List<Note> noteReq = noteServiceImpl.listDeletedNoteNameByAccountId(accountId);
             result = doSuccess(noteReq);

@@ -13,8 +13,8 @@ public interface UserService {
     @RequestMapping(value = "/user/insert", method = RequestMethod.POST)
     String insert(@RequestBody String userJson);
 
-    @RequestMapping(value = "/user/getUserByAccountId/{accountId}", method = RequestMethod.GET)
-    String getUserByAccountId(@PathVariable("accountId") String accountId);
+    @RequestMapping(value = "/user/getUserByAccountId", method = RequestMethod.GET)
+    String getUserByAccountId();
 
     @RequestMapping(value = "/user/updateByAccountId", method = RequestMethod.POST)
     String updateByAccountId(@RequestBody String userJson);

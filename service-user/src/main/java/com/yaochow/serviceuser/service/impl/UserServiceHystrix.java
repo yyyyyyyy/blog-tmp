@@ -12,7 +12,7 @@ public class UserServiceHystrix extends BaseHystrix implements UserService {
     }
 
     @Override
-    public String getUserByAccountId(String accountId) {
+    public String getUserByAccountId() {
         return doMsg();
     }
 

@@ -38,7 +38,6 @@ public class LoginServiceImpl implements LoginService {
         }
 
         if (accountResponseJson == null) {
-
             JSONObject result = new JSONObject();
             result.put(ReturnValueConstant.SUCCESS, false);
             result.put(ReturnValueConstant.ERROR_CODE, ErrorMsgEnum.ACCOUNT_ERROR.getErrorCode());
@@ -47,8 +46,8 @@ public class LoginServiceImpl implements LoginService {
         }
 
         if (Objects.equals(accountReq.getString("password"), accountResponseJson.getString("password"))) {
-            log.info("{}, {}", request.getSession().getId(), accountResponseJson.getString("id"));
-//            request.getSession().setAttribute("uid", accountResponseJson.getString("id"));
+            log.info("{}",request.getSession().getId());
+            request.getSession().setAttribute("uid", accountResponseJson.getString("id"));
             JSONObject result = new JSONObject();
             result.put(ReturnValueConstant.SUCCESS, true);
             result.put("uid", accountResponseJson.getString("id"));

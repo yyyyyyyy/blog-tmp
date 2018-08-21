@@ -1,9 +1,11 @@
 package com.yaochow.servicedata.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yaochow.servicedata.common.base.BaseService;
 import com.yaochow.servicedata.entity.Note;
 import com.yaochow.servicedata.repository.NoteRepository;
 import com.yaochow.servicedata.service.NoteService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class NoteServiceImpl extends BaseService implements NoteService {
 
     @Autowired
@@ -49,6 +52,7 @@ public class NoteServiceImpl extends BaseService implements NoteService {
         note.setAccountId(accountId);
         note.setCategory(category);
         setUnDeleted(note);
+        log.info(JSONObject.toJSONString(note));
         return noteRepository.findAll(Example.of(note));
     }
 

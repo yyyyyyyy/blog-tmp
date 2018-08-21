@@ -18,13 +18,13 @@ public class UserController extends BaseController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/getUserByAccountId/{accountId}", method = RequestMethod.GET)
-    public String getUserByAccountId(@PathVariable String accountId) {
+    @RequestMapping(value = "/getUserByAccountId", method = RequestMethod.GET)
+    public String getUserByAccountId() {
         long start = System.currentTimeMillis();
         String result;
         log.info("get user by accountId begin");
         try {
-            result = userService.getUserByAccountId(accountId);
+            result = userService.getUserByAccountId();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             result = doError();
