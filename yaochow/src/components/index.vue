@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div id="log" class="log">
+    <div class="log">
       <div class="content1" v-if="content1_on">
         <h2>Sign In</h2>
         <form @submit.prevent="submit">
@@ -22,18 +22,26 @@
           <input type="submit" class="register" value="Register">
           <input type="button" class="register-login" value="Sign In" v-on:click="register_login">
         </form>
+        <div class="clear"></div>
       </div>
       <div class="content3" v-if="content3_on">
         <ol>
-          <li class="li-note" v-for="(note, index) in notes" :key="note.id">
-            <a @click="getcontent(index)">{{note.noteName}}</a>
+          <li @click="getcontent(index)" class="li-note" v-for="(note, index) in notes" :key="note.id">
+            {{note.noteName}}
+          </li>
+          <li @click="add_note" class="li-add">
+            click here to add note
           </li>
         </ol>
       </div>
-      <div id="main" class="content4" v-if="content4_on" >
-        <mavon-editor :subfield="false" :default_open="preview" :editable="false" v-model="content"/>
+      <div class="content4" v-if="content4_on" >
+        <mavon-editor @save="$update" :subfield="false" v-model="current_note.noteContent"/>
       </div>
-      <div class="clear"></div>
+      <div class="content5" v-if="content5_on">
+        <div class="content5-input">^^input topic here^^ <input type="text" v-model="new_note.noteName"/></div>
+        <mavon-editor @save="$save" v-model="new_note.noteContent"/>
+        <div @click="add_return" class="add-return">click here to return note list</div>
+      </div>
     </div>
     <!--<div class="footer">
       <p>Copyright &copy; 2018.Company name All rights reserved.xxxxxxx <a href="http://yaochow.com/" target="_blank"
@@ -52,11 +60,12 @@ export default {
       content2_on: false,
       content3_on: true,
       content4_on: false,
+      content5_on: false,
       username: 'USERNAME',
       password: 'PASSWORD',
       email: 'EMAIL',
-      content: '',
-      content3_class: 'content3',
+      current_note: {},
+      new_note: {},
       preview: 'preview',
       notes: []
     }
@@ -105,7 +114,7 @@ export default {
       }
     },
     getcontent (id) {
-      this.content = this.notes[id].noteContent
+      this.current_note = this.notes[id]
       this.content4_on = true
     },
     submit () {
@@ -120,29 +129,32 @@ export default {
         }
 
       }).then((response) => {
-        console.info(response)
         if (response.data.success) {
           axios.get('http://www.yaochow.com/core/note/ListNoteNameByAccountId2ndCategory?category=', {
             headers: {
               withCredentials: true
             }
           }).then((response) => {
-            console.info(response)
             if (response.data.success) {
-              this.notes = JSON.parse(response.data.response)
+              if (response.data.response) {
+                this.notes = JSON.parse(response.data.response)
+              }
               this.content1_on = false
               this.content2_on = false
               this.content3_on = true
             }
           }).catch((response) => {
             console.info(response)
+            alert(response.data.errorMsg)
           })
+        } else {
+          alert(response.data.errorMsg)
         }
       }).catch((response) => {
-        console.info(response)
+        alert(response.data.errorMsg)
       })
     },
-    ListNoteNameByAccountId2ndCategory () {
+    list_notename_by_accountid2ndcategory () {
       axios.get('http://www.yaochow.com/core/note/ListNoteNameByAccountId2ndCategory?category=', {
         headers: {
           withCredentials: true
@@ -152,6 +164,82 @@ export default {
       }).catch(function (response) {
         console.info(response)
       })
+    },
+    add_note () {
+      this.content3_on = false
+      this.content4_on = false
+      this.content5_on = true
+    },
+    add_return () {
+      this.content5_on = false
+      this.content3_on = true
+      if (this.current_note.noteContent) {
+        this.content4_on = true
+      }
+      this.new_note = {}
+    },
+    $save () {
+      axios.post('http://www.yaochow.com/core/note/insert', JSON.stringify(this.new_note), {
+        headers: {
+          'Content-Type': 'application/json',
+          withCredentials: true
+        }
+
+      }).then((response) => {
+        if (response.data.success) {
+          axios.get('http://www.yaochow.com/core/note/ListNoteNameByAccountId2ndCategory?category=', {
+            headers: {
+              withCredentials: true
+            }
+          }).then((response) => {
+            if (response.data.success) {
+              if (response.data.response) {
+                this.notes = JSON.parse(response.data.response)
+              }
+              this.content5_on = false
+              this.content3_on = true
+            }
+          }).catch((response) => {
+            console.info(response)
+            alert(response.data.errorMsg)
+          })
+        } else {
+          alert(response.data.errorMsg)
+        }
+      }).catch((response) => {
+        alert(response.data.errorMsg)
+      })
+    },
+    $update () {
+      axios.post('http://www.yaochow.com/core/note/updateById', JSON.stringify(this.current_note), {
+        headers: {
+          'Content-Type': 'application/json',
+          withCredentials: true
+        }
+
+      }).then((response) => {
+        if (response.data.success) {
+          axios.get('http://www.yaochow.com/core/note/getNoteById/' + this.current_note.id, {
+            headers: {
+              withCredentials: true
+            }
+          }).then((response) => {
+            if (response.data.success) {
+              if (response.data.response) {
+                alert('update successfully')
+                this.current_note = JSON.parse(response.data.response)
+              }
+            }
+          }).catch((response) => {
+            console.info(response)
+            alert(response.data.errorMsg)
+          })
+        } else {
+          alert(response.data.errorMsg)
+        }
+      }).catch((response) => {
+        alert(response.data.errorMsg)
+      })
     }
   },
   mounted () {
@@ -160,12 +248,12 @@ export default {
         withCredentials: true
       }
     }).then((response) => {
-      console.info(response)
       if (response.data.success) {
-        this.notes = JSON.parse(response.data.response)
+        if (response.data.response) {
+          this.notes = JSON.parse(response.data.response)
+        }
       }
     }).catch((response) => {
-      console.info(response)
       this.content1_on = true
       this.content3_on = false
     })
