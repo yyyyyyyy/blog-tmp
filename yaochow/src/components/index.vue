@@ -113,7 +113,7 @@ export default {
         username: this.username,
         password: this.password
       }
-      axios.post('http://localhost:8762/user/login', JSON.stringify(postData), {
+      axios.post('http://www.yaochow.com/user/login', JSON.stringify(postData), {
         headers: {
           'Content-Type': 'application/json',
           withCredentials: true
@@ -122,7 +122,7 @@ export default {
       }).then((response) => {
         console.info(response)
         if (response.data.success) {
-          axios.get('http://localhost:8762/core/note/ListNoteNameByAccountId2ndCategory?category=', {
+          axios.get('http://www.yaochow.com/core/note/ListNoteNameByAccountId2ndCategory?category=', {
             headers: {
               withCredentials: true
             }
@@ -143,7 +143,7 @@ export default {
       })
     },
     ListNoteNameByAccountId2ndCategory () {
-      axios.get('http://localhost:8762/core/note/ListNoteNameByAccountId2ndCategory?category=', {
+      axios.get('http://www.yaochow.com/core/note/ListNoteNameByAccountId2ndCategory?category=', {
         headers: {
           withCredentials: true
         }
@@ -155,7 +155,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://localhost:8762/core/note/ListNoteNameByAccountId2ndCategory?category=', {
+    axios.get('http://www.yaochow.com/core/note/ListNoteNameByAccountId2ndCategory?category=', {
       headers: {
         withCredentials: true
       }
