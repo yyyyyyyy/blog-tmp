@@ -5,6 +5,7 @@ import com.yaochow.serviceuser.common.ErrorMsgEnum;
 import com.yaochow.serviceuser.common.ReturnValueConstant;
 import com.yaochow.serviceuser.service.AccountService;
 import com.yaochow.serviceuser.service.LoginService;
+import com.yaochow.serviceuser.util.MD5;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class LoginServiceImpl implements LoginService {
     private HttpServletRequest request;
 
     @Override
-    public String login(String accountJson) {
+    public String login(String accountJson) throws Exception {
         JSONObject accountReq = JSONObject.parseObject(accountJson);
         String account = accountService.getAccountByUsername(accountReq.getString("username"));
         JSONObject accountRes = JSONObject.parseObject(account);
@@ -45,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
             return result.toJSONString();
         }
 
-        if (Objects.equals(accountReq.getString("password"), accountResponseJson.getString("password"))) {
+        if (MD5.verify(accountReq.getString("password"), "yaochow",accountResponseJson.getString("password"))) {
             log.info("{}",request.getSession().getId());
             request.getSession().setAttribute("uid", accountResponseJson.getString("id"));
             JSONObject result = new JSONObject();

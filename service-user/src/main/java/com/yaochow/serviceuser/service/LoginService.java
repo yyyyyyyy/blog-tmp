@@ -2,5 +2,5 @@ package com.yaochow.serviceuser.service;
 
 public interface LoginService {
 
-    String login(String accountJson);
+    String login(String accountJson) throws Exception;
 }

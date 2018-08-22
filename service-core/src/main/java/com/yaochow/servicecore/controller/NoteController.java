@@ -31,8 +31,8 @@ public class NoteController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "/updateByAccountId", method = RequestMethod.POST)
-    public String updateByAccountId(@RequestBody String noteJson) {
+    @RequestMapping(value = "/updateById", method = RequestMethod.POST)
+    public String updateById(@RequestBody String noteJson) {
         long start = System.currentTimeMillis();
         String result;
         log.info("update by accountId, param : {}", noteJson);

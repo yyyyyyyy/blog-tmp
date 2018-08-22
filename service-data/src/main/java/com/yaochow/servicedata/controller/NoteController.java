@@ -46,20 +46,13 @@ public class NoteController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "/updateByAccountId", method = RequestMethod.POST)
-    public String updateByAccountId(@RequestBody String noteJson) {
+    @RequestMapping(value = "/updateNoteById", method = RequestMethod.POST)
+    public String updateNoteById(@RequestBody String noteJson) {
         long start = System.currentTimeMillis();
         String result;
-        log.info("update by accountId, param : {}", noteJson);
+        log.info("update by id, param : {}", noteJson);
         try {
             Note noteReq = JSONObject.parseObject(noteJson, Note.class);
-            if (checkSessionLost(request)) {
-                log.info("session lost");
-                result = doSessionError();
-                return result;
-            }
-            String accountId = (String) request.getSession().getAttribute("uid");
-            noteReq.setAccountId(accountId);
             Note noteRes = noteServiceImpl.updateNoteById(noteReq);
             result = doSuccess(noteRes);
         } catch (Exception e) {
@@ -67,7 +60,7 @@ public class NoteController extends BaseController {
             result = doError();
         }
 
-        log.info("update by accountId, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        log.info("update by id, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
         return result;
     }
 

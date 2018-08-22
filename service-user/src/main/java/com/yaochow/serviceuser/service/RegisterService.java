@@ -2,5 +2,5 @@ package com.yaochow.serviceuser.service;
 
 public interface RegisterService {
 
-    String register(String accountJson);
+    String register(String accountJson) throws Exception;
 }

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,8 @@ public class NoteServiceImpl extends BaseService implements NoteService {
         note.setCategory(category);
         setUnDeleted(note);
         log.info(JSONObject.toJSONString(note));
-        return noteRepository.findAll(Example.of(note));
+        List<Note> notes = noteRepository.findAll(Example.of(note));
+        return notes;
     }
 
     @Override
@@ -61,6 +63,7 @@ public class NoteServiceImpl extends BaseService implements NoteService {
         Note note = new Note();
         note.setAccountId(accountId);
         setDeleted(note);
-        return noteRepository.findAll(Example.of(note));
+        List<Note> notes = noteRepository.findAll(Example.of(note));
+        return notes;
     }
 }

@@ -6,6 +6,7 @@ import com.yaochow.serviceuser.common.ReturnValueConstant;
 import com.yaochow.serviceuser.service.AccountService;
 import com.yaochow.serviceuser.service.RegisterService;
 import com.yaochow.serviceuser.service.UserService;
+import com.yaochow.serviceuser.util.MD5;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class RegisterServiceImpl implements RegisterService {
     private UserService userService;
 
     @Override
-    public String register(String accountJson) {
+    public String register(String accountJson) throws Exception {
         JSONObject result = new JSONObject();
         JSONObject accountReq = JSONObject.parseObject(accountJson);
         String accountRes = accountService.getAccountByUsername(accountReq.getString("username"));
@@ -31,14 +32,15 @@ public class RegisterServiceImpl implements RegisterService {
         JSONObject accountResult = JSONObject.parseObject(accountRes);
         if (accountResult.getBoolean(ReturnValueConstant.SUCCESS) &&
                 StringUtils.isBlank(accountResult.getString(ReturnValueConstant.RESPONSE))) {
-            String accountInsertRes = accountService.insert(accountJson);
+            JSONObject accountReqJson = JSONObject.parseObject(accountJson);
+            accountReqJson.put("password", MD5.md5(accountReqJson.getString("password"),"yaochow"));
+            String accountInsertRes = accountService.insert(accountReqJson.toJSONString());
             JSONObject accountInsertJson = JSONObject.parseObject(accountInsertRes);
             if (accountInsertJson.getBoolean(ReturnValueConstant.SUCCESS)) {
                 JSONObject account = accountInsertJson.getJSONObject(ReturnValueConstant.RESPONSE);
                 JSONObject userReq = new JSONObject();
                 userReq.put("accountId", account.getString("id"));
                 userService.insert(userReq.toJSONString());
-
                 result.put(ReturnValueConstant.SUCCESS, true);
             } else {
                 result.put(ReturnValueConstant.SUCCESS, false);
