@@ -3,16 +3,18 @@ package com.yaochow.servicedata.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.yaochow.servicedata.common.base.BaseService;
 import com.yaochow.servicedata.entity.Note;
+import com.yaochow.servicedata.entity.PageEntity;
 import com.yaochow.servicedata.repository.NoteRepository;
 import com.yaochow.servicedata.service.NoteService;
+import freemarker.template.utility.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -23,6 +25,10 @@ public class NoteServiceImpl extends BaseService implements NoteService {
 
     @Override
     public Note insert(Note note) {
+        if (note.getNoteName() == null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            note.setNoteName(sdf.format(Calendar.getInstance().getTime()));
+        }
         setInsertParam(note);
         return noteRepository.insert(note);
     }
@@ -53,7 +59,6 @@ public class NoteServiceImpl extends BaseService implements NoteService {
         note.setAccountId(accountId);
         note.setCategory(category);
         setUnDeleted(note);
-        log.info(JSONObject.toJSONString(note));
         List<Note> notes = noteRepository.findAll(Example.of(note));
         return notes;
     }
@@ -64,6 +69,14 @@ public class NoteServiceImpl extends BaseService implements NoteService {
         note.setAccountId(accountId);
         setDeleted(note);
         List<Note> notes = noteRepository.findAll(Example.of(note));
+        return notes;
+    }
+
+    @Override
+    public Page<Note> listNote(Note note, PageEntity pageEntity) {
+        setUnDeleted(note);
+        log.info(JSONObject.toJSONString(note));
+        Page<Note> notes = noteRepository.findAll(Example.of(note), pageEntity);
         return notes;
     }
 }

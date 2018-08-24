@@ -77,7 +77,7 @@ public class NoteController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "/ListNoteNameByAccountId2ndCategory")
+    @RequestMapping(value = "/listNoteNameByAccountId2ndCategory")
     public String listNoteNameByAccountId2ndCategory(@RequestParam("category") String category) {
         long start = System.currentTimeMillis();
         String result;
@@ -104,6 +104,21 @@ public class NoteController extends BaseController {
             result = doError();
         }
         log.info("list deleted noteName, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "listNote", method = RequestMethod.POST)
+    public String listNote(@RequestBody String noteJson) {
+        long start = System.currentTimeMillis();
+        String result;
+        log.info("list note begin");
+        try {
+            result = noteService.listNote(noteJson);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("list note, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
         return result;
     }
 }

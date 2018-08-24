@@ -23,4 +23,5 @@ public class Note extends BaseEntity {
     private String category;
     @Field("note_content")
     private String noteContent;
+
 }

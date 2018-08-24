@@ -433,7 +433,16 @@ body {
   color: #791F16;
 }
 
+.li-bin {
+  border: 2px solid #376D29;
+  display: block;
+  margin-bottom: 0;
+  padding: 15px 20px;
+  color: #376D29;
+}
+
 .add-return {
+  padding: 15px 20px;
   display: block;
   width: 100%;
   color: #791F16;

@@ -35,4 +35,9 @@ public class NoteServiceHystrix extends BaseHystrix implements NoteService {
     public String listDeletedNoteNameByAccountId() {
         return doMsg();
     }
+
+    @Override
+    public String listNote(String noteJson) {
+        return doMsg();
+    }
 }

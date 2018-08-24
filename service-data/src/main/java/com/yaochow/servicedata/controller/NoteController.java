@@ -3,9 +3,11 @@ package com.yaochow.servicedata.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.yaochow.servicedata.common.base.BaseController;
 import com.yaochow.servicedata.entity.Note;
+import com.yaochow.servicedata.entity.PageEntity;
 import com.yaochow.servicedata.service.NoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,9 +113,8 @@ public class NoteController extends BaseController {
                 category = null;
             }
             log.info("list noteName by accountId : {} 2nd category : {}", accountId, category);
-            List<Note> noteReq = noteServiceImpl.listNoteNameByAccountId2ndCategory(accountId, category);
-            log.info(JSONObject.toJSONString(noteReq));
-            result = doSuccess(noteReq);
+            List<Note> noteRes = noteServiceImpl.listNoteNameByAccountId2ndCategory(accountId, category);
+            result = doSuccess(noteRes);
         } catch (Exception e) {
             log.info(e.getMessage(), e);
             result = doError();
@@ -134,13 +135,47 @@ public class NoteController extends BaseController {
             }
             String accountId = (String) request.getSession().getAttribute("uid");
             log.info("list deleted noteName by accountId : {}", accountId);
-            List<Note> noteReq = noteServiceImpl.listDeletedNoteNameByAccountId(accountId);
-            result = doSuccess(noteReq);
+            List<Note> noteRes = noteServiceImpl.listDeletedNoteNameByAccountId(accountId);
+            result = doSuccess(noteRes);
         } catch (Exception e) {
             log.info(e.getMessage(), e);
             result = doError();
         }
         log.info("list deleted noteName, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "/listNote", method = RequestMethod.POST)
+    public String listNote(@RequestBody String noteJson) {
+        long start = System.currentTimeMillis();
+        String result;
+        try {
+            if (checkSessionLost(request)) {
+                log.info("session lost");
+                result = doSessionError();
+                return result;
+            }
+            JSONObject json = JSONObject.parseObject(noteJson);
+            PageEntity page = new PageEntity();
+            if (json.getInteger("pageNumber") != null) {
+                page.setPageNumber(json.getInteger("pageNumber"));
+            }
+            if (json.getInteger("pageSize") != null) {
+                page.setPageNumber(json.getInteger("pageSize"));
+            }
+            Note noteReq = new Note();
+            noteReq.setCategory(json.getString("category"));
+            String accountId = (String) request.getSession().getAttribute("uid");
+            noteReq.setAccountId(accountId);
+            log.info("list note, param : {}", JSONObject.toJSONString(noteReq));
+            Page<Note> noteRes = noteServiceImpl.listNote(noteReq, page
+            );
+            result = doSuccess(noteRes);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("list noteName, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
         return result;
     }
 }

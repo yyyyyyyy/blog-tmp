@@ -25,4 +25,7 @@ public interface NoteService {
     @RequestMapping(value = "/note/listDeletedNoteNameByAccountId", method = RequestMethod.GET)
     String listDeletedNoteNameByAccountId();
 
+    @RequestMapping(value = "/note/listNote", method = RequestMethod.POST)
+    String listNote(@RequestBody String noteJson);
+
 }

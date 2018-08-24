@@ -12,14 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Objects;
 
-/**
- * 登陆过滤器：检查用户是否已登陆
- */
 @Component
-public class LoginFilter extends ZuulFilter {
+public class FirstFilter extends ZuulFilter {
 
-    private Logger log = LoggerFactory.getLogger(LoginFilter.class);
-
+    private Logger log = LoggerFactory.getLogger(FirstFilter.class);
     @Override
     public String filterType() {
         return "pre";
@@ -27,36 +23,23 @@ public class LoginFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 1;
+        return 0;
     }
 
-    /**
-     * 登陆、注销、注册不需要过滤
-     *
-     * @return
-     */
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         String uri = request.getRequestURI();
-        if (Objects.equals("/user/login", uri) ||
-                Objects.equals("/user/logout", uri) ||
-                Objects.equals("/user/register", uri) ||
-                Objects.equals("/core/note/listNote", uri)) {
-            return false;
+        if (Objects.equals("/core/note/listNote", uri)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
-    /**
-     * 过滤检查session内uid是否有值
-     *
-     * @return
-     */
     @Override
     public Object run() {
-        log.info("user filter begin");
+        log.info("first filter begin");
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         String uid = (String) request.getSession().getAttribute("uid");
@@ -65,14 +48,15 @@ public class LoginFilter extends ZuulFilter {
                 JSONObject result = new JSONObject();
                 result.put("success", false);
                 result.put("errorMsg", "Login first.");
+                result.put("errorCode", "1");
                 ctx.setSendZuulResponse(false);
-                ctx.setResponseStatusCode(401);
+                ctx.setResponseStatusCode(200);
                 ctx.getResponse().getWriter().write(result.toJSONString());
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
         }
-        log.info("user filter finish");
+        log.info("first filter finish");
         return null;
     }
 }

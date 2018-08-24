@@ -15,6 +15,7 @@ import java.util.Objects;
  * 注销过滤器
  */
 
+@Component
 public class LogoutFilter extends ZuulFilter {
 
     private Logger log = LoggerFactory.getLogger(LogoutFilter.class);
@@ -26,7 +27,7 @@ public class LogoutFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 0;
+        return 1;
     }
 
     @Override
