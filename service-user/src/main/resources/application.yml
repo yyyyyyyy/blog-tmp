@@ -28,6 +28,12 @@ hystrix:
           thread:
             timeoutInMilliseconds: 12000
 
+mail:
+  from:
+    account: register@yaochow.com
+    password: Abcd1234
+  host: smtp.yaochow.com
+
 
 
 

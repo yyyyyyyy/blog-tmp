@@ -184,8 +184,7 @@ export default {
         }
       }).then((response) => {
         if (response.data.success) {
-          this.content2_on = false
-          this.content3_on = true
+          alert('success')
         } else {
           alert(response.data)
         }

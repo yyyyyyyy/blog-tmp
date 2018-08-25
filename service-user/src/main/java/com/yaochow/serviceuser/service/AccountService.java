@@ -18,4 +18,7 @@ public interface AccountService {
 
     @RequestMapping(value = "/account/updateAccountById", method = RequestMethod.POST)
     String updateAccountById(@RequestBody String accountJson);
+
+    @RequestMapping(value = "/account/getAccountByEmail/{email}", method = RequestMethod.GET)
+    String getAccountByEmail(@PathVariable("email") String email);
 }

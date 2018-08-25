@@ -46,8 +46,9 @@ public class LoginServiceImpl implements LoginService {
             return result.toJSONString();
         }
 
-        if (MD5.verify(accountReq.getString("password"), "yaochow",accountResponseJson.getString("password"))) {
-            log.info("{}",request.getSession().getId());
+        if (MD5.verify(accountReq.getString("password"), "yaochow", accountResponseJson.getString("password")) &&
+                Objects.equals("1", accountResponseJson.getString("confirm"))) {
+            log.info("{}", request.getSession().getId());
             request.getSession().setAttribute("uid", accountResponseJson.getString("id"));
             JSONObject result = new JSONObject();
             result.put(ReturnValueConstant.SUCCESS, true);

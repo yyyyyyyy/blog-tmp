@@ -27,13 +27,6 @@ public class UserController extends BaseController {
         log.info("insert, param : {}", userJson);
         try {
             User userReq = JSONObject.parseObject(userJson, User.class);
-            if (checkSessionLost(request)) {
-                log.info("session lost");
-                result = doSessionError();
-                return result;
-            }
-            String accountId = (String) request.getSession().getAttribute("uid");
-            userReq.setAccountId(accountId);
             User userRes = userServiceImpl.insert(userReq);
             result = doSuccess(userRes);
         } catch (Exception e) {
@@ -74,13 +67,16 @@ public class UserController extends BaseController {
         log.info("update user by accountId, param : {}", userJson);
         try {
             User userReq = JSONObject.parseObject(userJson, User.class);
-            if (checkSessionLost(request)) {
-                log.info("session lost");
-                result = doSessionError();
-                return result;
+
+            if (userReq.getAccountId() == null) {
+                if (checkSessionLost(request)) {
+                    log.info("session lost");
+                    result = doSessionError();
+                    return result;
+                }
+                String accountId = (String) request.getSession().getAttribute("uid");
+                userReq.setAccountId(accountId);
             }
-            String accountId = (String) request.getSession().getAttribute("uid");
-            userReq.setAccountId(accountId);
             User userRes = userServiceImpl.updateByAccountId(userReq);
             result = doSuccess(userRes);
         } catch (Exception e) {

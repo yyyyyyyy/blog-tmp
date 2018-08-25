@@ -7,10 +7,7 @@ import com.yaochow.serviceuser.service.RegisterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -55,6 +52,21 @@ public class AccountController extends BaseController {
             result = doError();
         }
         log.info("register, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
+    @RequestMapping(value = "/confirm", method = RequestMethod.GET)
+    public String registerConfirm(@RequestParam String email, @RequestParam String key) {
+        long start = System.currentTimeMillis();
+        String result;
+        log.info("register confirm email : {}, key : {}", email, key);
+        try {
+            result = registerServiceImpl.registerConfirm(email, key);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("register confirm, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
         return result;
     }
 

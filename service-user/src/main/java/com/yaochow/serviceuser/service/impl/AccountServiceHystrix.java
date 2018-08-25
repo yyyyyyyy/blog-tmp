@@ -20,4 +20,9 @@ public class AccountServiceHystrix extends BaseHystrix implements AccountService
     public String updateAccountById(String accountJson) {
         return doMsg();
     }
+
+    @Override
+    public String getAccountByEmail(String email) {
+        return doMsg();
+    }
 }

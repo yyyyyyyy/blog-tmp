@@ -53,6 +53,22 @@ public class AccountController extends BaseController {
         return result;
     }
 
+    @RequestMapping(value = "/getAccountByEmail/{email}", method = RequestMethod.GET)
+    public String getAccountByEmail(@PathVariable String email) {
+        long start = System.currentTimeMillis();
+        String result;
+        log.info("get account by email : {}", email);
+        try {
+            Account accountRes = accountServiceImpl.getAccountByEmail(email);
+            result = doSuccess(accountRes);
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
+            result = doError();
+        }
+        log.info("get account by email, result : {}, cost : {}ms", result, System.currentTimeMillis() - start);
+        return result;
+    }
+
     @RequestMapping(value = "/updateAccountById", method = RequestMethod.POST)
     public String updateAccountById(@RequestBody String accountJson) {
         long start = System.currentTimeMillis();

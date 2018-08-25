@@ -33,7 +33,26 @@ public class AccountServiceImpl extends BaseService implements AccountService {
 
     @Override
     public Account updateAccountById(Account account) {
-        setUpdateParam(account);
-        return accountRepository.save(account);
+
+        Account accountQuery = new Account();
+        accountQuery.setId(account.getId());
+        Optional<Account> optional = accountRepository.findOne(Example.of(accountQuery));
+        if (account.getConfirm() != null) {
+            optional.get().setConfirm(account.getConfirm());
+        }
+        if (account.getPassword() != null) {
+            optional.get().setPassword(account.getPassword());
+        }
+        setUpdateParam(optional.get());
+        return accountRepository.save(optional.get());
+    }
+
+    @Override
+    public Account getAccountByEmail(String email) {
+        Account account = new Account();
+        account.setEmail(email);
+        setUnDeleted(account);
+        Optional<Account> optional = accountRepository.findOne(Example.of(account));
+        return optional.isPresent() ? optional.get() : null;
     }
 }

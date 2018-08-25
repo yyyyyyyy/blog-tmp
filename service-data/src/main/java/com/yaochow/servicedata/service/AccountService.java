@@ -9,4 +9,6 @@ public interface AccountService {
     Account getAccountByUsername(String username);
 
     Account updateAccountById(Account account);
+
+    Account getAccountByEmail(String email);
 }

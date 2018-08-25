@@ -16,9 +16,9 @@ import java.util.Objects;
  * 登陆过滤器：检查用户是否已登陆
  */
 @Component
-public class LoginFilter extends ZuulFilter {
+public class SessionFilter extends ZuulFilter {
 
-    private Logger log = LoggerFactory.getLogger(LoginFilter.class);
+    private Logger log = LoggerFactory.getLogger(SessionFilter.class);
 
     @Override
     public String filterType() {
@@ -43,7 +43,8 @@ public class LoginFilter extends ZuulFilter {
         if (Objects.equals("/user/login", uri) ||
                 Objects.equals("/user/logout", uri) ||
                 Objects.equals("/user/register", uri) ||
-                Objects.equals("/core/note/listNote", uri)) {
+                Objects.equals("/core/note/listNote", uri) ||
+                Objects.equals("/user/confirm", uri)) {
             return false;
         }
         return true;

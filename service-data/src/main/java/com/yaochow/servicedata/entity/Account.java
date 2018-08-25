@@ -20,4 +20,6 @@ public class Account extends BaseEntity {
     private String password;
     @Field("email")
     private String email;
+    @Field("confirm")
+    private String confirm;
 }
