@@ -35,6 +35,7 @@ mail:
   host: smtp.yaochow.com
 
 user.md5.password.key: www.yaochow.com
+user.md5.uid.key: www.yaochow.com
 
 
 
