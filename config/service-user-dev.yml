@@ -34,6 +34,7 @@ mail:
     password: Abcd1234
   host: smtp.yaochow.com
 
+user.md5.password.key: www.yaochow.com
 
 
 
