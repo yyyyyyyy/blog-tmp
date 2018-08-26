@@ -16,8 +16,8 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 3000
-        readTimeout: 3000
+        connectTimeout: 6000
+        readTimeout: 6000
 
 hystrix:
   command:
@@ -26,7 +26,7 @@ hystrix:
         isolation:
           strategy: SEMAPHORE
           thread:
-            timeoutInMilliseconds: 12000
+            timeoutInMilliseconds: 24000
 
 mail:
   from:
