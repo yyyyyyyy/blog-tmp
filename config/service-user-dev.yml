@@ -36,6 +36,8 @@ mail:
 
 user.md5.password.key: www.yaochow.com
 user.md5.uid.key: www.yaochow.com
+user.email.content: "请点击下方连接确认注册，若非本人操作请忽略此邮件。\r\n http://localhost:8762/user/confirm?email=%s&key=%s'
+user.register.confirm.result: "<script>alert('Successful');window.location.href='http://www.yaochow.com';</script>"
 
 
 
